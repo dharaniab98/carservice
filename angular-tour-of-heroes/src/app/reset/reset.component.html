@@ -1,0 +1,68 @@
+
+<div class="container">
+    <h1>Password Reset</h1>
+   <p style="color:red;">{{message}}</p> 
+    <form #resetForm="ngForm">
+    
+    <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password1"  [(ngModel)]="password1"  minlength="8" maxlength="12"  name="password1" required #t1password="ngModel">
+            <div [hidden]="t1password.valid || t1password.pristine"
+               class="alert alert-danger">
+               Password required
+           </div>
+        </div>
+        <div class="form-group">
+            <label for="password">RE-Password</label>
+            <input type="password" class="form-control" id="password2"  [(ngModel)]="password2"  minlength="8" maxlength="12"  name="password2" required #t2password="ngModel">
+            <div [hidden]="t2password.valid || t2password.pristine"
+            class="alert alert-danger">
+            Password required
+        </div>
+        </div>
+
+
+    <button type="button" class="btn btn-sucess" [disabled]="!resetForm.form.valid" (click)="onSubmit()">submit</button>
+
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<p>login works!</p>
+<div>
+<form>
+
+    <div class="header">
+        <table>
+     
+            <tr> <td> <label>Gmail:</label></td><td><input type="email" name="gmail"   required/></td></tr>
+            <tr> <td><label>Password</label></td><td><input type="password" name="password" minlength="8" required/></td></tr>
+   
+            <tr>  <td><input type="button"  value="submit" /></td> </tr>
+        </table>
+    </div>
+   
+</form>
+   
+    
+</div>-->

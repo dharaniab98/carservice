@@ -1,0 +1,115 @@
+
+<div class="container">
+        <h1>Car Details</h1>
+        <form #carData="ngForm">
+        <div class="form-group">
+                <label for="license">License Number</label>
+                <input type="text" class="form-control" id="license"  [(ngModel)]="car.license"  name="license" minlength="2" required #license="ngModel">
+                <div [hidden]="license.valid || license.pristine"
+                        class="alert alert-danger">
+                        LicenseNumber is required
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="chesis">Chesis Number</label>
+                <input type="text" class="form-control" id="chesis"  [(ngModel)]="car.chesis"  name="chesis" minlength="2" required #chesis="ngModel">
+                <div [hidden]="chesis.valid || chesis.pristine"
+                        class="alert alert-danger">
+                        chesis Number is required
+                </div>
+         </div>   
+         <div class="form-group">
+                <label for="battery">Battery Number</label>
+                <input type="text" class="form-control" id="battery"  [(ngModel)]="car.battery"  name="battery" minlength="2" required #battery="ngModel">
+                <div [hidden]="battery.valid || battery.pristine"
+                        class="alert alert-danger">
+                        Battery Number is required
+                </div>
+         </div>                  
+                
+         <div class="form-group">
+                        <label for="make">Car Maker</label>
+                        <input type="text" class="form-control" id="make"  [(ngModel)]="car.make"  name="maker" minlength="2" required #make="ngModel">
+                        <div [hidden]="make.valid || make.pristine"
+                                class="alert alert-danger">
+                                 Provide The car maker
+                        </div>
+                 </div>   
+        <div class="form-group">
+                <label for="model">Car Model</label>
+                <input type="text" class="form-control" id="model"  [(ngModel)]="car.model"  name="model" minlength="2" required #model="ngModel">
+                <div [hidden]="model.valid || model.pristine"
+                        class="alert alert-danger">
+                        Model is required
+                </div>
+        </div>   
+
+        <div class="form-group">
+                        <label for="color">Car Color</label>
+                        <input type="text" class="form-control" id="color"  [(ngModel)]="car.color"  name="color" minlength="2" required #color="ngModel">
+                        <div [hidden]="color.valid || color.pristine"
+                                class="alert alert-danger">
+                                color is required
+                        </div>
+                 </div>   
+        <div class="form-group">
+                <label for="fuel">Fuel Level</label>
+                <input type="text" class="form-control" id="fuel"  [(ngModel)]="car.fuel"  name="fuel" minlength="2" required #fuel="ngModel">
+                <div [hidden]="fuel.valid || fuel.pristine"
+                        class="alert alert-danger">
+                        Fuel level is required
+                </div>
+        </div>
+        <div class="form-group">
+                        <label for="body">Body Description</label>
+                        <textarea  class="form-control" rows="2" cols="20" [(ngModel)]="car.body" name="body" id="body" #body="ngModel"></textarea> 
+                        <div [hidden]="body.valid || body.pristine"
+                                class="alert alert-danger">
+                            Describe about the body damage otherwise give "Good"
+                        </div>
+                 </div>             
+        <div class="form-group">
+                <label for="complaint">Specific Complaints</label>
+                <textarea class="form-control" rows="2" cols="20" [(ngModel)]="car.complaint" id="complaint" name="complaint" #complaint="ngModel"></textarea> 
+                <div [hidden]="complaint.valid || complaint.pristine"
+                        class="alert alert-danger">
+                     Notify Any specific complaints otherwise Give "Nothing"
+                </div>
+                </div>                  
+
+                <button type="submit" [disabled]="!carData.form.valid" class="btn btn-success"   (click)="carDetails(cardata)" >Submit</button>
+
+        </form>
+ </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--orm #cardata="ngForm" >
+<table>
+        <tr><td><label>LicenseNumber:</label></td><td><input  type="text" [(ngModel)]="car.license" name="license"        required/></td></tr>
+        <tr><td> <label>ChesisNumber:</label></td><td><input type="text" [(ngModel)]="car.chesis" name="chesis"   required/></td></tr>
+        <tr> <td> <label>BatteryNumber:</label></td><td><input type="text" [(ngModel)]="car.battery" name="battery"   required/></td></tr>
+        <tr><td><label>Make</label></td><td><input  type="text" name="make"  [(ngModel)]="car.make"  required/></td></tr>
+        <tr><td> <label>Model</label></td><td><input type="text" [(ngModel)]="car.model" name="model"  required/></td></tr>
+        <tr> <td> <label>Color</label></td><td><input type="text" [(ngModel)]="car.color" name="color"   required/></td></tr>
+        <tr><td><label>FuelLevel:</label></td><td><input  type="number" [(ngModel)]="car.fuel" name="fuel"    required/></td></tr>
+        <tr><td> <label>BodyDescription:</label></td><td><textarea rows="2" cols="20" [(ngModel)]="car.body" name="body"></textarea></td></tr>
+        <tr> <td> <label>Complaints:</label></td><td><textarea rows="2" cols="20" [(ngModel)]="car.complaint" name="complaint"></textarea></td></tr>
+        <input type="button" name="submit" value="submit" (click)="carDetails(cardata)" />
+</table>      
+</form>-->

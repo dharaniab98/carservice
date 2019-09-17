@@ -1,0 +1,67 @@
+
+<div class="container">
+        <h1>Login</h1>
+       <p style="color:red;">{{message}}</p> 
+        <form #loginForm="ngForm">
+        <div class="form-group">
+                <label for="email">Gmail</label>
+                <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required  #temail="ngModel">
+                <div [hidden]="temail.valid || temail.pristine"
+                    class="alert alert-danger">
+                    Gmail is required
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password"  [(ngModel)]="password"   name="password" required #tpassword="ngModel">
+                <div [hidden]="tpassword.valid || tpassword.pristine"
+                   class="alert alert-danger">
+                   Password required
+               </div>
+       </div>
+
+
+        <button type="button" class="btn btn-sucess" [disabled]="!loginForm.form.valid" (click)="onSubmit()">login</button>
+
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<p>login works!</p>
+<div>
+    <form>
+ 
+        <div class="header">
+            <table>
+         
+                <tr> <td> <label>Gmail:</label></td><td><input type="email" name="gmail"   required/></td></tr>
+                <tr> <td><label>Password</label></td><td><input type="password" name="password" minlength="8" required/></td></tr>
+       
+                <tr>  <td><input type="button"  value="submit" /></td> </tr>
+            </table>
+        </div>
+       
+    </form>
+       
+        
+</div>-->

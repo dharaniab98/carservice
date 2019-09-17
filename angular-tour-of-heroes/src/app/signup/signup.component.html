@@ -1,0 +1,108 @@
+
+
+<div class="container">
+          <h1>Signup</h1>
+          <p style="color:red;">{{message}}</p> 
+          <form #signForm="ngForm">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name"  [(ngModel)]="signdata.name"  name="name" minlength="2" required #name="ngModel">
+              <div [hidden]="name.valid || name.pristine"
+                  class="alert alert-danger">
+                Name is required
+              </div>
+            </div>
+      
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="number" class="form-control" [(ngModel)]="signdata.phone" name="phone" maxlength="10" minlength="10" id="phone">
+            </div>
+            
+            <div class="form-group">
+                    <label for="email">Gmail</label>
+                    <input type="email" class="form-control" id="email" [(ngModel)]="signdata.email" name="email" required  #email="ngModel">
+                    <div [hidden]="email.valid || email.pristine"
+                       class="alert alert-danger">
+                        Gmail is required
+                   </div>
+            </div>
+
+            <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" maxlength="12" minlength="8" [(ngModel)]="signdata.password"   name="password" required #password="ngModel">
+                    <div [hidden]="password.valid || password.pristine|| password.touched"
+                       class="alert alert-danger">
+                       password should be 8 to 12 characters
+                   </div>
+           </div>
+          
+            <button type="button" class="btn btn-success" [disabled]="!signForm.form.valid" (click)="userData()">Submit</button>
+      
+          </form>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div>
+   
+
+ <form >
+ <div class="header"  [formGroup]="myGroup">
+ <table>
+    <tr>
+        <td><label>Name:</label></td>
+        <td><input  type="text"  [(ngModel)]="signdata.name" [ngClass]="{'form-control': true,
+          'is-invalid': !firstName.valid && firstName.touched,
+          'is-valid': firstName.valid}"
+      formControlName="firstName" id="fnText" placeholder="Enter first name"  name="name"  minlength="2"   required></td>
+     <small *ngIf="sign.form.controls.name.required && firstName.touched" id="fnHelp" class="form-text custom-invalid-feedback">Field is required</small>
+      <small *ngIf="sign.errors?.minlength && firstName.touched" id="fnHelp" class="form-text custom-invalid-feedback">Name should be atleast 2 characters.</small>
+    </tr>
+    <tr> 
+        <td> <label>Phone:</label></td>
+        <td><input type="number"  [(ngModel)]="signdata.phone" name="phone"  maxlength="10" required/></td>
+    </tr>
+    <tr>
+         <td> <label>Gmail:</label></td>
+         <td><input type="email" [(ngModel)]="signdata.email" name="gmail"   required/></td>
+    </tr>
+    <tr>
+         <td><label>Password</label></td>
+         <td><input type="password" [(ngModel)]="signdata.password" name="password" minlength="8" required/></td>
+    </tr>
+    <tr> <td><label>Re-Password</label></td><td><input type="password" name="repassword" minlength="8" required/></td></tr>
+    <tr> 
+         <td><input type="button" [disabled]="!reactiveForm.valid" (click)="forData(reactiveForm)" value="submit" name="submit" /></td> 
+    </tr>
+ </table>
+</div>
+
+</form>
+
+ 
+</div>-->
