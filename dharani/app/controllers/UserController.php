@@ -35,7 +35,7 @@ class UserController extends ControllerBase
     }
     
     
-    
+    // Action to reset the password
     public function editAction()
     {
           $response = new \Phalcon\Http\Response();
@@ -56,12 +56,14 @@ class UserController extends ControllerBase
       
      if($check==0)
      {
-         $response->setJsonContent([  "status"=>"invalid Email"]);
+         $response->setJsonContent([  "status"=>"2"]);
      }
      else
      {
-         $res=$this->mail(sha1($email).uniqid());
+         $encode=sha1($email).uniqid();
+         $res=$this->mail($encode,$email);
          $response->setJsonContent([  "status"=>$res]);
+         $this->insertForgot($email, $encode);
          
      }
          
@@ -71,8 +73,8 @@ class UserController extends ControllerBase
     }
     
     
-    public function mail($unid)
-    {
+    public function mail($unid,$email)
+    {              $link='<a href="http://localhost:4200/resetpassword/'.$unid.'">http://localhost:4200/resetpassword/'.$unid.'</a>';
                    $mail = new PHPMailer;
                     //Tell PHPMailer to use SMTP
                     $mail->isMail();
@@ -86,12 +88,12 @@ class UserController extends ControllerBase
                     //Set an alternative reply-to address
                     $mail->addReplyTo('replyto@example.com', 'First Last');
                     //Set who the message is to be sent to
-                    $mail->addAddress('dharani.kumar@edureka.co', 'kumar');
+                    $mail->addAddress($email, 'hiii');
                     //Set the subject line
                     $mail->Subject = 'Reset link';
                     //Read an HTML message body from an external file, convert referenced images to embedded,
                     //convert HTML into a basic plain-text alternative body
-                    $mail->msgHTML($unid);//file_get_contents('contents.html'), __DIR__);
+                    $mail->msgHTML($link);//file_get_contents('contents.html'), __DIR__);
                     //Replace the plain text body with one created manually
                     $mail->AltBody = 'This is a plain-text message body';
                     //Attach an image file
@@ -99,9 +101,9 @@ class UserController extends ControllerBase
                     //send the message, check for errors
                     if (!$mail->send()) {
                         //echo "Mailer Error: " . $mail->ErrorInfo;
-                          return "error in sending Mail";        
+                          return "3";        
                     } else {
-                        return "Reset Link sent";
+                        return "1";
                        
                    }
     }
@@ -111,20 +113,61 @@ class UserController extends ControllerBase
          return $user[0]->count;
     }
     
+    // funtion to insert the password request cahnge in database
+    public function insertForgot($gmail,$encode)
+    {
+        $d = new DateTime();
+        $forgot=new Forgot();
+        $forgot->gmail=$gmail;
+        $forgot->encode=$encode;
+        $forgot->cr_date=$d->format("Y-m-d H:i:s");
+        $forgot->md_date=$d->format("Y-m-d H:i:s");
+        $forgot->save();
+    }
     
+    
+    //Action to reset the password 
     public function resetAction()
     {
          $response = new \Phalcon\Http\Response();
          $response->setHeader('Access-Control-Allow-Origin', '*');
          $response->setContentType("application/json, charset=UTF-8");
          $val= $this->request->getJsonRawBody();
-         $email=$val[0]->id;
-          $response->setJsonContent([  "status"=> sha1($email)]);
+         $coded=$val[0]->id;
+         $password=$val[0]->pass;
+         // $response->setJsonContent([  "status"=> $val]);
+          $forgot= Forgot::find(['conditions'=>'encode="'.$coded.'"','columns'=>'gmail,status']);
+          if(($forgot[0]->status) != 0)
+          {
+              $response->setJsonContent([  "status"=> "2"]);
+          }
+          else
+          {
+              $update= Forgot::findFirst(['conditions'=>'encode="'.$coded.'"']);
+              $update->status="1";
+              $update->save();
+            $res=$this->updatePasswordAction($forgot[0]->gmail,$password);
+             $response->setJsonContent([  "status"=>$res ]);
+          }
+          
           
           return  $response->send();
        
     }
-        
+    public function updatePasswordAction($email,$password)
+    {
+          $update=Users::findFirst(['conditions'=>'email="'.$email.'"']);
+          $update->password=sha1($password);
+         if(var_dump($update->save()=='bool(true)'));
+         {
+             return "1";
+         }
+        return 0;
+      
+    }
+    
+    
+   
     
 }
 

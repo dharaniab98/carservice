@@ -3,14 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/example.com/public_html/dharani/app/config/router.php</file>
+            <file>file:/var/www/example.com/public_html/dharani/public/index.php</file>
             <file>file:/var/www/example.com/public_html/dharani/app/controllers/IndexController.php</file>
             <file>file:/var/www/example.com/public_html/dharani/app/controllers/UserController.php</file>
             <file>file:/var/www/example.com/public_html/dharani/app/config/services.php</file>
-            <file>file:/var/www/example.com/public_html/dharani/app/allapi/DataService.php</file>
-            <file>file:/var/www/example.com/public_html/dharani/app/config/loader.php</file>
-            <file>file:/var/www/example.com/public_html/dharani/app/config/config.php</file>
-            <file>file:/var/www/example.com/public_html/dharani/app/allapi/PHPMailer.php</file>
         </group>
     </open-files>
 </project-private>

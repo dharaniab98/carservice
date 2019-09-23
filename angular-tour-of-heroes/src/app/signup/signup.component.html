@@ -1,8 +1,12 @@
 
-
-<div class="container">
+<div   class="dialogue"  *ngIf="!display">
+  <p style="color:red;">{{message}}</p> 
+  <button *ngIf="loginbut"  type="button" class="btn btn-sucess"  (click)="messageDialogue()"> Login</button>
+  <button *ngIf="!loginbut" type="button" class="btn btn-sucess"  (click)="messageDialogue()"> Signup</button>
+</div>
+<div  *ngIf="display"  class="container"> 
           <h1>Signup</h1>
-          <p style="color:red;">{{message}}</p> 
+          
           <form #signForm="ngForm">
             <div class="form-group">
               <label for="name">Name</label>

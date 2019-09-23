@@ -1,7 +1,7 @@
 <h1>Todays Assigned Vehicles!</h1>
 <div  class="container" style="background-color:lightgray;">
     <table  class="table">
-    <tr><th>orderid</th><th>car_id</th><th>extra_cost</th><th>Remarks</th><th></th><tr>
+    <tr><th>orderid</th><th>car_id</th><th>License</th><th>Pending</th><th>extra_cost</th><th>Remarks</th><th></th><tr>
     <tr *ngFor="let dat of data;let i=index" >
      
      <td >
@@ -11,10 +11,24 @@
         {{dat.car_id}}
      </td>
      <td>
-         <input class="form-control"  type="number" [(ngModel)]="dat.eng_extra_cost" name="extra_cost{{i}}" >
+        {{dat.car_license_number}}
+     </td>
+     <td *ngIf="dat.status==0">
+          Engineering Work
+     </td>
+     <td *ngIf="dat.status==1">
+          interior Work
+     </td>
+     <td *ngIf="dat.status==3">
+          Washing  Work
+     </td>
+
+
+     <td>
+         <input class="form-control"  type="number" [(ngModel)]="eng_extra_cost" name="extra_cost{{i}}" >
      </td>
      <td>
-         <textarea  class="form-control" cols="20" rows="1" [(ngModel)]="dat.remarks" name="remarks{{i}}"></textarea>
+         <textarea  class="form-control" cols="20" rows="1" [(ngModel)]="remarks" name="remarks{{i}}"></textarea>
      </td>
      <td>
           <button   name="save" value="Done"   name="button{{i}}"  (click)="orderUpdate(dat)" >Done</button>

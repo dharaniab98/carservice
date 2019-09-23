@@ -1,9 +1,6 @@
 <?php
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Email as EmailValidator;
-
-class Users extends \Phalcon\Mvc\Model
+class Forgot extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -16,37 +13,25 @@ class Users extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    public $name;
+    public $gmail;
+
+    /**
+     *
+     * @var string
+     */
+    public $encode;
 
     /**
      *
      * @var integer
      */
-    public $phone;
+    public $status;
 
     /**
      *
      * @var string
      */
-    public $email;
-
-    /**
-     *
-     * @var string
-     */
-    public $password;
-
-    /**
-     *
-     * @var string
-     */
-    public $type;
-
-    /**
-     *
-     * @var integer
-     */
-    public $capacity;
+    public $md_date;
 
     /**
      *
@@ -55,34 +40,12 @@ class Users extends \Phalcon\Mvc\Model
     public $cr_date;
 
     /**
-     * Validations and business logic
-     *
-     * @return boolean
-     */
-//    public function validation()
-//    {
-//        $validator = new Validation();
-//
-//        $validator->add(
-//            'email',
-//            new EmailValidator(
-//                [
-//                    'model'   => $this,
-//                    'message' => 'Please enter a correct email address',
-//                ]
-//            )
-//        );
-//
-//        return $this->validate($validator);
-//    }
-
-    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("mydata");
-        $this->setSource("users");
+        $this->setSource("forgot");
     }
 
     /**
@@ -92,14 +55,14 @@ class Users extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'users';
+        return 'forgot';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Users[]|Users|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Forgot[]|Forgot|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -110,7 +73,7 @@ class Users extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Users|\Phalcon\Mvc\Model\ResultInterface
+     * @return Forgot|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {

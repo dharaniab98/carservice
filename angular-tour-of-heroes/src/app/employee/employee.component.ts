@@ -54,10 +54,13 @@ export class EmployeeComponent implements OnInit ,OnDestroy{
   {
       //   console.log("hello");
   }
-  
+  eng_extra_cost:number=0;
+  remarks:string="";
   availableOrders(eng_id:string,type:string)
   {
   //  console.log("orderavial"+eng_id+type);
+  this.eng_extra_cost=0;
+  this.remarks="";
     this.empservice.getOrderData(eng_id,type).subscribe(xyz => 
       {
         
@@ -72,6 +75,8 @@ export class EmployeeComponent implements OnInit ,OnDestroy{
   orderStatus=[];
   orderUpdate(dat)
   {
+       dat.eng_extra_cost=this.eng_extra_cost;
+       dat.remarks=this.remarks;
        if(dat.status==0)
        {
         dat.status=1;

@@ -65,8 +65,9 @@ class IndexController extends ControllerBase
        //Action that resturns basic service cost
        public function basicServiceCostAction()
        {
-          $val=ServicesAvailable::find(['columns' => 'service_id, basic_service_cost']);
-          echo json_encode($val);
+          $val=ServicesAvailable::find(['columns' => 'SUM(basic_service_cost) as sum']);
+          //echo $val[0]->sum;
+          return $val[0]->sum;
        }
        
        
@@ -86,10 +87,10 @@ class IndexController extends ControllerBase
            //echo "inser car data";
                         $d = new DateTime();
                         $user=new Users();
-                        $user->name=$name;
-                        $user->phone=$phone;
-                        $user->email=$email;
-                        $user->password=$password;
+                        $user->name=$this->filter->sanitize($name,[ 'striptags','trim','string' ]);
+                        $user->phone=$this->filter->sanitize($phone,[ 'striptags','trim','string' ]);
+                        $user->email=$this->filter->sanitize($email ,[ 'email' ]);
+                        $user->password=sha1($password);
                         $user->type="cust";
                         $user->capacity=0;
                         $user->cr_date=$d->format("Y-m-d H:i:s");
@@ -126,12 +127,22 @@ class IndexController extends ControllerBase
             {
                 $this->response->setHeader('Access-Control-Allow-Origin', '*');
                 $this->response->setContentType("application/json, charset=UTF-8");     
-                $user= Users::find(['conditions'=>'email="'.$email.'" AND password="'.$password.'"','columns'=>'COUNT(*) as count,id,type']);
-                echo $user[0]->count;
+                $user= Users::find(['conditions'=>'email="'.$email.'" ','columns'=>'COUNT(*) as count,id,type,password']);
+              //  echo $user[0]->password;
                 echo $user[0]->id;
+              //  echo sha1($password);
+               // exit();
+                
                 if($user[0]->count !=0 && $user[0]->id != 0)
                 {
-                    $this->response->setJsonContent(["status"=>"valid","user_id"=>$user[0]->id,"type"=>$user[0]->type]); 
+                    if($user[0]->password==sha1($password))
+                    {
+                        
+                       $this->response->setJsonContent(["status"=>"valid","user_id"=>$user[0]->id,"type"=>$user[0]->type]); 
+                    }
+                    else{
+                       $this->response->setJsonContent(["status"=>"invalidpass","user_id"=>0]); 
+                     }
                  }
                  else{
                        $this->response->setJsonContent(["status"=>"invalid","user_id"=>0]); 
@@ -146,13 +157,17 @@ class IndexController extends ControllerBase
 
 
        // this action is used to inser the car details
-       public function insertCarDataAction($license,$chesis,$battery,$make,$model,$color,$fuel,$body,$complaint){
+       public function insertCarDataAction($license,$chesis,$battery,$make,$model,$color,$fuel,$body,$complaint,$owner_id){
            $response = new \Phalcon\Http\Response();
            $response->setHeader('Access-Control-Allow-Origin', '*');
            
-            $det=$this->employeeAllocation();
+            
 //       echo $det[eng_id];
 //       echo $det[wash_id];
+      if($this->carExistenceAction($license) == 0)
+      {
+          
+          $det=$this->employeeAllocation();
         if(($det[eng_id] !=-1)&&($det[wash_id] != -1))
         {
            $d = new DateTime();
@@ -169,7 +184,7 @@ class IndexController extends ControllerBase
             $carData->car_fuel_level=$fuel;
             $carData->car_body_description=$body;
             $carData->user_complaints=$complaint;
-            $carData->owner_id=10001;
+            $carData->owner_id=$owner_id;
             $carData->car_cr_date=$d->format("Y-m-d H:i:s");
              $carData->save();
 
@@ -186,6 +201,11 @@ class IndexController extends ControllerBase
 
       
         }
+      }
+      else
+      {
+          $response->setJsonContent( [ "status"=>"Car already in service",]);
+      }
            //echo json_encode($val);
            return  $response->send();
            
@@ -208,7 +228,16 @@ class IndexController extends ControllerBase
             $order->save();
            echo ("done");
         }
-
+        
+        public function carExistenceAction($license)
+        {
+            
+            $d = new DateTime();
+            $date= $d->format("Y-m-d");
+            $car= CarDetails::find(['conditions'=>'car_license_number="'.$license.'" AND car_cr_date like "%'.$date.'%"','columns'=>'count(*) as count']) ; 
+            return $car[0]->count;
+         }
+        
       //used to display the engineer works and washer man work details from service orderdetails
 
         public function getOrdersAction($id,$type)
@@ -218,19 +247,27 @@ class IndexController extends ControllerBase
 
                  $d = new DateTime();
                $dat= $d->format("Y-m-d");
-                //echo($dat);
+                
 
                  if($type=="eng") {
-                     $val = ServiceOrderDetails::find(['conditions' => 'eng_id="'.$id.'" AND cr_date like "%'.$dat.'%" AND status=0','columns'=>'order_id,car_id,eng_extra_cost,remarks,status']);
+                   //  echo($dat);
+                   //  $val = ServiceOrderDetails::find(['conditions' => 'eng_id="'.$id.'" AND cr_date like "%'.$dat.'%" AND status=0','columns'=>'order_id,car_id,eng_extra_cost,remarks,status']);
                    // $val = ServiceOrderDetails::find(['conditions' => 'eng_id='.$id.'','columns'=>'order_id,car_id']);
+                    $val=$this->getEngOrderDataAction($id);
+                   // echo json_encode($val);
+                    $response->setJsonContent($val);
                 }
                 else{
-                    $val = ServiceOrderDetails::find(['conditions' => 'wash_id="'.$id.'" AND cr_date like "%'.$dat.'%" AND status > 0 AND status< 7','columns'=>'order_id,car_id,eng_extra_cost,remarks,status']);
+                   // $val = ServiceOrderDetails::find(['conditions' => 'wash_id="'.$id.'" AND cr_date like "%'.$dat.'%" AND status > 0 AND status< 7','columns'=>'order_id,car_id,eng_extra_cost,remarks,status']);
+                    $val=$this->getWashOrderDataAction($id);
+                    //echo json_encode($val);
+                    $response->setJsonContent($val);
+                    
                 }
 
             $response->setContentType("application/json, charset=UTF-8");
-            $response->setJsonContent($val);
-            return  $response->send();
+            
+               return  $response->send();
 
           //  echo json_encode($val);
 
@@ -241,6 +278,7 @@ class IndexController extends ControllerBase
         {
             $response = new \Phalcon\Http\Response();
             $response->setHeader('Access-Control-Allow-Origin', '*');
+             $response->setContentType("application/json, charset=UTF-8");
 
              $update=ServiceOrderDetails::findFirst(['conditions'=>'order_id='.$order_id.'']);
              $update->remarks=$update->remarks.$remarks;
@@ -248,21 +286,22 @@ class IndexController extends ControllerBase
              if($status==1)
              {
                  $update->eng_extra_cost=$extra_cost;
+                 $response->setJsonContent( ["status"=>"Engineering Work Done"] );
+             }
+             else if($status > 1 && $status < 4)
+             {
+                 $update->wash_extra_cost=$extra_cost;
+                  $response->setJsonContent( ["status"=>"interir Cleaning"] );
              }
              else
              {
-                 $update->wash_extra_cost=$extra_cost;
+                $res= $this->mailCustAction($order_id);
+                 $response->setJsonContent( ["status"=>$res] );
              }
              $update->save();
 
-            $response->setContentType("application/json, charset=UTF-8");
-            $response->setJsonContent(
-                [
-                    "status"=>"valid"
-                    
-                ]
-
-            );
+           
+            
 
             //echo json_encode($val);
             return  $response->send();
@@ -431,8 +470,69 @@ class IndexController extends ControllerBase
         }
         
 
-
+    public function mailCustAction($id)
+    {
+            $resultset = $this->modelsManager->createBuilder()
+          ->columns('Users.email')
+          ->from('CarDetails')
+          ->join('Users','Users.id=CarDetails.owner_id')
+          ->join('ServiceOrderDetails', 'ServiceOrderDetails.car_id=CarDetails.car_id')
+           ->where('ServiceOrderDetails.order_id="'.$id.'"')
+          ->getQuery()
+          ->execute();
+           $email=$resultset[0]->email;
+            $basicCost=$this->basicServiceCostAction();  
+            $extraCost=$this->extraCostAction($id);
+            $totalCost=$basicCost+$extraCost;
+            $this->finalMailAction($email,$totalCost);
+            return $email;
+            
+      
+    }
+    
+    public function finalMailAction($email,$totalCost)
+    {
+                    $mail = new PHPMailer;
+                    $mail->isMail();
+                   
+                    //Username to use for SMTP authentication - use full email address for gmail
+                    $mail->Username = "dharaniab98@gmail.com";
+                    //Password to use for SMTP authentication
+                    $mail->Password = "dharaniab";
+                    //Set who the message is to be sent from
+                    $mail->setFrom('from@carserivce.co', 'First Last');
+                    //Set an alternative reply-to address
+                    $mail->addReplyTo('replyto@example.com', 'First Last');
+                    //Set who the message is to be sent to
+                    $mail->addAddress($email, 'hiii');
+                    //Set the subject line
+                    $mail->Subject = 'Car Cleaners Final Amount';
+                    //Read an HTML message body from an external file, convert referenced images to embedded,
+                    //convert HTML into a basic plain-text alternative body
+                    $mail->msgHTML("Total cost".$totalCost);//file_get_contents('contents.html'), __DIR__);
+                    //Replace the plain text body with one created manually
+                    $mail->AltBody = 'This is a plain-text message body';
+                    //Attach an image file
+                   // $mail->addAttachment('images/phpmailer_mini.png');
+                    //send the message, check for errors
+                    if (!$mail->send()) {
+                        //echo "Mailer Error: " . $mail->ErrorInfo;
+                          return "error in sending Mail";        
+                    } else {
+                        return "Mail sent";
+                       
+                   }
+    }
+    public function extraCostAction($id)
+    {
+        //$update=ServiceOrderDetails::findFirst(['conditions'=>'order_id='.$id.'']);
+    
+       $update=ServiceOrderDetails::findFirst(['conditions'=>'order_id="'.$id.'"']);
+        $extra_cost= $update->eng_extra_cost  + $update->wash_extra_cost;
+        return  $extra_cost;
         
+    }
+//        
         
         
         
@@ -494,10 +594,77 @@ class IndexController extends ControllerBase
          
     }
 
+    
+    public function getEngOrderDataAction($id)
+    {
+         $d = new DateTime();
+         $dat= $d->format("Y-m-d");
+         $resultset = $this->modelsManager->createBuilder()
+          ->columns('order_id,ServiceOrderDetails.car_id,eng_extra_cost,remarks,status,CarDetails.car_license_number')
+          ->from('CarDetails')
+          ->join('ServiceOrderDetails', 'ServiceOrderDetails.car_id=CarDetails.car_id')
+           ->where('ServiceOrderDetails.eng_id="'.$id.'" AND ServiceOrderDetails.cr_date like "%'.$dat.'%" AND ServiceOrderDetails.status=0')
+          ->getQuery()
+          ->execute();
+        // echo json_encode($resultset);
+          return $resultset;
+    }
+     
+    public function getWashOrderDataAction($id)
+    {
+        $d = new DateTime();
+         $dat= $d->format("Y-m-d");
+         $resultset = $this->modelsManager->createBuilder()
+          ->columns('order_id,ServiceOrderDetails.car_id,eng_extra_cost,remarks,status,CarDetails.car_license_number')
+          ->from('CarDetails')
+          ->join('ServiceOrderDetails', 'ServiceOrderDetails.car_id=CarDetails.car_id')
+           ->where('ServiceOrderDetails.wash_id="'.$id.'" AND ServiceOrderDetails.cr_date like "%'.$dat.'%" AND ServiceOrderDetails.status > 0 AND ServiceOrderDetails.status < 7')
+          ->getQuery()
+          ->execute();
+           return $resultset;
+    }
+    
+    
+    
+    public function adminAction()
+    {
+         $d = new DateTime();
+         $dat= $d->format("Y-m-d");
+         $resultset = $this->modelsManager->createBuilder()
+          ->columns('CarDetails.car_id,car_license_number,car_chesis_number,car_battery_number,car_model_name,car_make,car_fuel_level,car_body_description,user_complaints,owner_id,car_cr_date')
+          ->from('CarDetails')
+          ->join('ServiceOrderDetails', 'ServiceOrderDetails.car_id = CarDetails.car_id')
+           ->where('CarDetails.car_cr_date like "%'.$dat.'%" AND ServiceOrderDetails.car_id != CarDetails.car_id')
+          ->getQuery()
+          ->execute();
+         echo json_encode($resultset);
+          // return $resultset;
+    }
+    
+    
+    
+    public function filterAction()
+    {
+        $hello=$this->filter->sanitize("helloo<<<<<",[
+        'striptags',
+        'trim',
+         'string'
+    ]);
+        echo $hello;
+    }
+    
 
 }
 
 
+//create table forgot(
+//     id int(10) primary key AUTO_INCREMENT,
+//     gmail varchar2(250),
+//     encode varchar2(250),
+//     status int default 0,   
+//     md_date DATETIME,
+//     cr_date DATETIME   
+//     )ENGINE = InnoDB AUTO_INCREMENT=1;
 
 
 

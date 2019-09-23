@@ -20,8 +20,8 @@ export class ResetsService {
     this.http=http;
    }
 
-  resetPassword(password:string):Observable<Status>{
-    let data = [{ id: password}];
+  resetPassword(password:string,id:string):Observable<Status>{
+    let data = [{ pass: password,id:id}];
    let url="http://www.dharani.com/dharani/user/reset"; 
       return this.http.post<Status>(url,data,httpOptions);
  }

@@ -1,7 +1,11 @@
 
-<div class="container">
+ <div   class="dialogue"  *ngIf="!display">
+      <p style="color:red;">{{message}}</p> 
+      <button type="button" class="btn btn-sucess"  (click)="forgot()"> Go to forgot</button>
+ </div>
+<div   *ngIf="display"  class="container" >
     <h2>submit gmail for reset link</h2>
-   <p style="color:red;">{{message}}</p> 
+  
     <form #forgotForm="ngForm">
     <div class="form-group">
             <label for="email">Gmail</label>
@@ -12,7 +16,7 @@
             </div>
     </div>
     
-    <button type="button" class="btn btn-sucess" [disabled]="!forgotForm.form.valid" (click)="onSubmit()">login</button>
+    <button type="button" class="btn btn-sucess" [disabled]="!forgotForm.form.valid" (click)="onSubmit()">submit</button>
 
 </form>
 </div>

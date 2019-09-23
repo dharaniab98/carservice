@@ -1,10 +1,14 @@
-
-<div class="container">
+<div   class="dialogue"  *ngIf="!display">
+        <p style="color:red;">{{message}}</p> 
+        <button type="button" class="btn btn-sucess"  (click)="reqService()"> Go to Service request</button>
+ </div>
+<div  *ngIf="display" class="container">
         <h1>Car Details</h1>
+        
         <form #carData="ngForm">
         <div class="form-group">
                 <label for="license">License Number</label>
-                <input type="text" class="form-control" id="license"  [(ngModel)]="car.license"  name="license" minlength="2" required #license="ngModel">
+                <input type="text" class="form-control" id="license"  [(ngModel)]="car.license"  name="license" minlength="2"  placeholder="AP215678" required #license="ngModel">
                 <div [hidden]="license.valid || license.pristine"
                         class="alert alert-danger">
                         LicenseNumber is required
@@ -12,7 +16,7 @@
         </div>
         <div class="form-group">
                 <label for="chesis">Chesis Number</label>
-                <input type="text" class="form-control" id="chesis"  [(ngModel)]="car.chesis"  name="chesis" minlength="2" required #chesis="ngModel">
+                <input type="text" class="form-control" id="chesis"  [(ngModel)]="car.chesis" placeholder="987665" name="chesis" minlength="2" required #chesis="ngModel">
                 <div [hidden]="chesis.valid || chesis.pristine"
                         class="alert alert-danger">
                         chesis Number is required
@@ -20,7 +24,7 @@
          </div>   
          <div class="form-group">
                 <label for="battery">Battery Number</label>
-                <input type="text" class="form-control" id="battery"  [(ngModel)]="car.battery"  name="battery" minlength="2" required #battery="ngModel">
+                <input type="text" class="form-control" id="battery"  [(ngModel)]="car.battery" placeholder="E4477AH12V780" name="battery" minlength="2" required #battery="ngModel">
                 <div [hidden]="battery.valid || battery.pristine"
                         class="alert alert-danger">
                         Battery Number is required
@@ -29,7 +33,7 @@
                 
          <div class="form-group">
                         <label for="make">Car Maker</label>
-                        <input type="text" class="form-control" id="make"  [(ngModel)]="car.make"  name="maker" minlength="2" required #make="ngModel">
+                        <input type="text" class="form-control" id="make" placeholder="Maruti" [(ngModel)]="car.make"  name="maker" minlength="2" required #make="ngModel">
                         <div [hidden]="make.valid || make.pristine"
                                 class="alert alert-danger">
                                  Provide The car maker
@@ -37,7 +41,7 @@
                  </div>   
         <div class="form-group">
                 <label for="model">Car Model</label>
-                <input type="text" class="form-control" id="model"  [(ngModel)]="car.model"  name="model" minlength="2" required #model="ngModel">
+                <input type="text" class="form-control" id="model"  placeholder="Dzire"  [(ngModel)]="car.model"  name="model" minlength="2" required #model="ngModel">
                 <div [hidden]="model.valid || model.pristine"
                         class="alert alert-danger">
                         Model is required
@@ -46,7 +50,7 @@
 
         <div class="form-group">
                         <label for="color">Car Color</label>
-                        <input type="text" class="form-control" id="color"  [(ngModel)]="car.color"  name="color" minlength="2" required #color="ngModel">
+                        <input type="text" class="form-control" id="color"   placeholder="red"  [(ngModel)]="car.color"  name="color" minlength="2" required #color="ngModel">
                         <div [hidden]="color.valid || color.pristine"
                                 class="alert alert-danger">
                                 color is required
@@ -54,7 +58,7 @@
                  </div>   
         <div class="form-group">
                 <label for="fuel">Fuel Level</label>
-                <input type="text" class="form-control" id="fuel"  [(ngModel)]="car.fuel"  name="fuel" minlength="2" required #fuel="ngModel">
+                <input type="text" class="form-control" id="fuel"  [(ngModel)]="car.fuel" placeholder="9" name="fuel" minlength="1" required #fuel="ngModel">
                 <div [hidden]="fuel.valid || fuel.pristine"
                         class="alert alert-danger">
                         Fuel level is required
@@ -62,7 +66,7 @@
         </div>
         <div class="form-group">
                         <label for="body">Body Description</label>
-                        <textarea  class="form-control" rows="2" cols="20" [(ngModel)]="car.body" name="body" id="body" #body="ngModel"></textarea> 
+                        <textarea  class="form-control" rows="2" cols="20" placeholder="Any bends cracks" [(ngModel)]="car.body" name="body" id="body" #body="ngModel"></textarea> 
                         <div [hidden]="body.valid || body.pristine"
                                 class="alert alert-danger">
                             Describe about the body damage otherwise give "Good"
@@ -70,7 +74,7 @@
                  </div>             
         <div class="form-group">
                 <label for="complaint">Specific Complaints</label>
-                <textarea class="form-control" rows="2" cols="20" [(ngModel)]="car.complaint" id="complaint" name="complaint" #complaint="ngModel"></textarea> 
+                <textarea class="form-control" rows="2" cols="20" [(ngModel)]="car.complaint" placeholder="Any break or engine specify the problem" id="complaint" name="complaint" #complaint="ngModel"></textarea> 
                 <div [hidden]="complaint.valid || complaint.pristine"
                         class="alert alert-danger">
                      Notify Any specific complaints otherwise Give "Nothing"

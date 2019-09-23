@@ -18,7 +18,7 @@ export class CarService {
   
   
 //url="http://www.dharani.com/dharani/index/insertCarData/Ap2133/23444/bt450/red/tata/i20/3/nothhig/break"
-url="http://www.dharani.com/dharani/index/insertCarData";
+//url="http://www.dharani.com/dharani/index/insertCarData";
    http:HttpClient;
   
 
@@ -34,15 +34,15 @@ url="http://www.dharani.com/dharani/index/insertCarData";
       
   // }
         putcardata(data:Cardata):Observable<Status>{
-
+         let  url="http://www.dharani.com/dharani/index/insertCarData";
                 for (const key in data) {
-                    this.url=this.url+"/"+data[key];
+                    url=url+"/"+data[key];
                     
                 }
                   //  console.log(this.url);
                   // this.http.post(this.url,"hello",httpOptions);
                   // console.log("hello");
-                  return this.http.get<Status>(this.url);
+                  return this.http.get<Status>(url);
                   
         }
 }

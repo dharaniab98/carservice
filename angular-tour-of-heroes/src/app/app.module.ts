@@ -22,12 +22,16 @@ import { AuthGuard } from './auth/auth.guard';
 import { LogauthGuard } from './auth/logauth.guard';
 import { ForgotComponent } from './forgot/forgot.component';
 import { ResetComponent } from './reset/reset.component';
+import { AdminComponent } from './admin/admin.component';
 
 
 
 
 
 const appRoutes: Routes = [
+  { path: 'http://localhost:4200', redirectTo: 'http://localhost:4200/login', pathMatch: 'full' },
+  { path: 'forgot' ,component:ForgotComponent},
+  { path:'resetpassword/:code', component:ResetComponent },
   { path: 'login' , component:LoginComponent , canActivate:[LogauthGuard]},
   { path: 'signup', component: SignupComponent,canActivate:[LogauthGuard] },
 
@@ -50,6 +54,7 @@ const appRoutes: Routes = [
     NavbarComponent,
     ForgotComponent,
     ResetComponent,
+    AdminComponent,
     
    
   

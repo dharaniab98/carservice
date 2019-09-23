@@ -8,7 +8,8 @@ export class Cardata {
         public color?:string,
         public fuel?:number,
         public body?:string,
-        public  complaint?:string
+        public  complaint?:string,
+        public  user_id?:string
       //  public alterEgo?: string
       ) {  }
 

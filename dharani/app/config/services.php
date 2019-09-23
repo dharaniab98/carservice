@@ -9,6 +9,11 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Direct as Flash;
 use Phalcon\Http\Request;
 use Phalcon\Http\Response;
+use Phalcon\Mvc\Model\Manager as ModelsManager;
+use Phalcon\Filter as Filter;
+
+$filter = new Filter();
+
 /**
  * Shared configuration service
  */
@@ -125,6 +130,20 @@ $di->setShared(
     }
 );
 
+
+$di->set(
+    "modelsManager",
+    function() {
+        return new ModelsManager();
+    }
+);
+
+$di->set(
+    "filter",
+    function() {
+        return new Filter();
+    }
+);
 
 $di->set(
     'response',

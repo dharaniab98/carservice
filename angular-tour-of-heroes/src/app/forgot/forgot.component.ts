@@ -10,12 +10,21 @@ import { Status } from 'src/status';
 export class ForgotComponent implements OnInit {
 
   email="";
+  id:string;
   forgotService:ForgotsService;
   constructor(forgotService:ForgotsService) { 
    this.forgotService=forgotService;
 
 
   }
+  
+  display:boolean=true;
+   message="";
+ forgot()
+ {
+   this.message="";
+   this.display=true;
+ }
 
   ngOnInit() {
   }
@@ -23,9 +32,30 @@ export class ForgotComponent implements OnInit {
   onSubmit()
   {
     this.forgotService.resetLink(this.email).subscribe(data=>{
-          console.log(data);
+         // console.log(data);
+          this.status=data;
+          if(this.status.status=="1")
+          {
+            this.displayDiv();
+            this.message="Check Mail for reset";
+          }
+          else if(this.status.status=="2")
+          {
+           // console.log(this.status.status);
+            this.message="Invalid Mail";
+            this.displayDiv();
+          }
+          else
+          {
+            this.message="Error in sending Mail";
+            this.displayDiv();
+          }
     });
    // console.log(this.email);
+  }
+  displayDiv()
+  {
+    this.display=false;
   }
 
 }

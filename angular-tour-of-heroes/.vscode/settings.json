@@ -1,0 +1,4 @@
+{
+    "git.confirmForcePush": false,
+    "git.useForcePushWithLease": false
+}
